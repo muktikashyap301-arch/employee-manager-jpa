@@ -1,0 +1,53 @@
+Problems encountered during this project & their Solutions  .......
+
+
+
+1. Infinite Recursion in JSON Serialization
+
+**Problem:** `GET /employees` was returning infinitely nested JSON —
+Employee → Department → List of Employees → Department → ...
+
+**Cause:** Bidirectional relationship between Employee and Department.
+When Jackson serialized the response, it followed the object references infinitely.
+
+**Solution:** Used `@JsonIgnoreProperties` on both sides of the relationship.
+- On `Department.employee` → `@JsonIgnoreProperties("department")`
+- On `Employee.department` → `@JsonIgnoreProperties("employee")`
+
+---
+
+ 2. Schema Validation Failure on Startup
+
+**Problem:** App failed to start with:
+`SchemaManagementException: missing column [department_id] in table [employees]`
+
+**Cause:** `ddl-auto=validate` was checking if the existing MySQL table matched
+the entity — but the `department_id` foreign key column was missing from the table.
+
+**Solution:** Dropped and recreated the `employees` table with the correct
+`department_id` foreign key column.
+
+---
+
+
+ 3. Column Name Mismatch
+
+**Problem:** Table had `departments_id` but entity had `@JoinColumn(name = "department_id")`.
+
+**Cause:** Typo in SQL while creating the table manually.
+
+**Solution:** Recreated the table with the correct column name `department_id`
+to match the entity annotation exactly.
+
+---
+
+### 4. N+1 Query Problem
+
+**Problem:** `GET /departments` was firing one query per department to fetch
+its employees — instead of one single query for everything.
+
+**Cause:** `@OneToMany` defaults to `FetchType.LAZY` — Hibernate fetches
+the parent first, then fires a separate query for each child collection.
+
+**Solution:** Identified as N+1 problem. Fix using `JOIN FETCH` or
+`@EntityGraph` is planned as the next learning step.
