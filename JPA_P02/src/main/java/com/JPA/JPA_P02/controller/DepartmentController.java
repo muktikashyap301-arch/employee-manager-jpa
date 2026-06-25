@@ -2,6 +2,7 @@ package com.JPA.JPA_P02.controller;
 
 import com.JPA.JPA_P02.entity.Department;
 import com.JPA.JPA_P02.service.DepartmentService;
+import com.JPA.JPA_P02.service.DepartmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,11 @@ public class DepartmentController {
     @GetMapping("/{id}")
             public Department getById(@PathVariable Integer id ){
                 return departmentService.getDepartmentById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Department updatingDepartment(@PathVariable Integer id ,@RequestBody Department department ){
+        return departmentService.updateDepartment(id,department);
     }
 
     @DeleteMapping("/{id}")

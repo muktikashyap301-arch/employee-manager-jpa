@@ -1,8 +1,9 @@
 package com.JPA.JPA_P02.controller;
 
+import com.JPA.JPA_P02.entity.Department;
 import com.JPA.JPA_P02.entity.Employee;
 import com.JPA.JPA_P02.service.EmployeeService;
-import lombok.Data;
+import com.JPA.JPA_P02.service.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,11 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Employee getEmployeeById(@PathVariable Integer id ){
         return employeeService.getEmployeeById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Employee updatingEmployee(@PathVariable Integer id , @RequestBody Employee employee ){
+        return employeeService.updateEmployee(id,employee);
     }
 
     @DeleteMapping("/{id}")
