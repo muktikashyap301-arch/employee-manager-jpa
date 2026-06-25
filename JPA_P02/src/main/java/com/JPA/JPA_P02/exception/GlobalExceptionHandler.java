@@ -2,6 +2,7 @@ package com.JPA.JPA_P02.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -17,6 +18,15 @@ public class GlobalExceptionHandler {
         errorResponse.setStatus(404);
         errorResponse.setTimeStamp(LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex){
+        ErrorResponse errorResponse=new ErrorResponse();
+        errorResponse.setMessage(ex.getBindingResult().getFieldError().getDefaultMessage());
+        errorResponse.setStatus(400);
+        errorResponse.setTimeStamp(LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
