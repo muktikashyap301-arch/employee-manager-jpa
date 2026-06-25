@@ -1,6 +1,7 @@
 package com.JPA.JPA_P02.service;
 
 import com.JPA.JPA_P02.entity.Department;
+import com.JPA.JPA_P02.exception.ResourceNotFound;
 import com.JPA.JPA_P02.repository.DepartmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Department updateDepartment(Integer id, Department department) {
         Department existingDepartment=departmentRepo.findById(id)
-                .orElseThrow(()->new RuntimeException("Department not found by id= "+ id));
+                .orElseThrow(()-> new ResourceNotFound("Department not found by id= "+ id));
         existingDepartment.setName(department.getName());
         existingDepartment.setLocation(department.getLocation());
         existingDepartment.setEmployee(department.getEmployee());
